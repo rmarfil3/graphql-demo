@@ -1,14 +1,19 @@
 #!/usr/bin/env python
 # -- coding: utf-8 --
-import sys
 import webapp2
+from graphene_gae.webapp2 import GraphQLHandler
 from webapp2_extras import routes
 
-# public
-from handlers.public.index import IndexPage
+from handlers.graphql import MyGraphQLHandler
+import schemas
+
+config = {
+    'graphql_schema': schemas.schema
+}
 
 app = webapp2.WSGIApplication([
     routes.DomainRoute(r'<:.*>', [
-        webapp2.Route('/', handler=IndexPage, name="www-index")
-    ])
-])
+        # webapp2.Route('/graphql', handler=MyGraphQLHandler, name="www-graphql")
+        webapp2.Route('/graphql', handler=GraphQLHandler, name="www-graphql")
+    ]),
+], config=config)
