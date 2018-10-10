@@ -1,0 +1,8 @@
+*.py[oc]
+.idea/
+.vscode/
+node_modules/
+.DS_Store
+.hooks/cached
+.ropeproject
+venv
