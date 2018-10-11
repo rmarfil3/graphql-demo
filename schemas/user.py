@@ -1,20 +1,36 @@
 import graphene
+from graphene import ObjectType
 from graphene_gae import NdbObjectType, NdbConnectionField
 
 from models.user import User
 
 
-class UserType(NdbObjectType):
-    class Meta:
-        model = User
-        interfaces = (graphene.relay.Node,)
+# class UserType(NdbObjectType):
+#     class Meta:
+#         model = User
+#         interfaces = (graphene.relay.Node,)
+
+
+class UserType(ObjectType):
+    name = graphene.String()
+    email = graphene.String()
+
+    def resolve_name(self, info, **kwargs):
+        return self.name
+
+    def resolve_email(self, info, **kwargs):
+        return self.email
 
 
 class Query(graphene.ObjectType):
-    users = NdbConnectionField(UserType)
+    # users = NdbConnectionField(UserType)
+    users = graphene.List(UserType, id=graphene.String())
 
-    def resolve_users(self, info, **kwargs):
-        return User.query()
+    # def resolve_users(self, info, **kwargs):
+    #     return User.query()
+
+    def resolve_users(self, info, id, **kwargs):
+        return User.query().fetch()
 
 
 class Register(graphene.relay.ClientIDMutation):
